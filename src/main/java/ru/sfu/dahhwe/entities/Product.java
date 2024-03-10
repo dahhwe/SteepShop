@@ -1,6 +1,7 @@
 package ru.sfu.dahhwe.entities;
 
 import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 
 @Entity
@@ -25,6 +26,9 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @Column(name = "quantity")
+    private Integer availableQuantity;
 
     public Product(Long id, String name, String description, BigDecimal price, String imageUrl, Category category) {
         this.id = id;
@@ -84,5 +88,13 @@ public class Product {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public Integer getAvailableQuantity() {
+        return availableQuantity;
+    }
+
+    public void setAvailableQuantity(Integer availableQuantity) {
+        this.availableQuantity = availableQuantity;
     }
 }

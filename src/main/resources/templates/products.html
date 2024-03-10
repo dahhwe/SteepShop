@@ -1,19 +1,58 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Product List</title>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Shop Products</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-<h1>Product List</h1>
-<div>
-    <ul>
-        <li th:each="product : ${products}">
-            <span th:text="${product.name}">Product Name</span>
-            - $<span th:text="${product.price}">Price</span>
-        </li>
-    </ul>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">SteepShop</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Features</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Pricing</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div th:each="product : ${products}" class="col-md-4 mb-3">
+            <div class="card product-card">
+                <img th:src="@{${product.imageUrl}}" class="card-img-top" alt="Product Image">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${product.name}">Product Name</h5>
+                    <p class="card-text" th:text="${product.description}">Product Description</p>
+                    <p class="card-text">Price: <span class="price-text">$<span
+                            th:text="${product.price}"></span></span></p>
+                    <p class="card-text">Available Quantity: <span th:text="${product.availableQuantity}">0</span></p>
+                    <!-- Add to Cart button or more details link can go here -->
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<footer class="text-center mt-4 py-2 bg-light">
+    © 2024 Shop Name. All rights reserved.
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>
