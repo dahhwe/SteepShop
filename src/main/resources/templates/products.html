@@ -4,18 +4,20 @@
     <meta charset="UTF-8">
     <title>Shop Products</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="#">SteepShop</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
+        <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
                 <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
             </li>
@@ -25,6 +27,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="#">Pricing</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="cart-icon"><i class="fas fa-shopping-cart"></i> Cart</a>
+            </li>
         </ul>
     </div>
 </nav>
@@ -32,7 +37,7 @@
 <div class="container">
     <div class="row">
         <div th:each="product : ${products}" class="col-md-4 mb-3">
-            <div class="card product-card">
+            <div class="card product-card" th:attr="data-product-id=${product.id}">
                 <img th:src="@{${product.imageUrl}}" class="card-img-top" alt="Product Image">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${product.name}">Product Name</h5>
@@ -40,17 +45,30 @@
                     <p class="card-text">Price: <span class="price-text">$<span
                             th:text="${product.price}"></span></span></p>
                     <p class="card-text">Available Quantity: <span th:text="${product.availableQuantity}">0</span></p>
-                    <!-- Add to Cart button or more details link can go here -->
+                    <button class="btn btn-purchase">Buy</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<footer class="text-center mt-4 py-2 bg-light">
-    © 2024 Shop Name. All rights reserved.
-</footer>
+<div id="cart-menu" class="cart-menu">
+    <div class="cart-header">
+        <h4>Cart</h4>
+        <button id="close-cart">X</button>
+    </div>
+    <div id="cart-items" class="cart-items">
+    </div>
+    <div class="cart-footer">
+        <h5>Total: $<span id="cart-total">0</span></h5>
+    </div>
+</div>
 
+
+<footer class="text-center mt-4 py-2 bg-light">
+    © 2024 Steep Shop. All rights reserved.
+</footer>
+<script src="/js/script.js"> </script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
