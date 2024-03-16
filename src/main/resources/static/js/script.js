@@ -1,37 +1,39 @@
-document.addEventListener('DOMContentLoaded', function () {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+document.addEventListener('DOMContentLoaded', () => {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-    function saveCartToLocalStorage() {
-        localStorage.setItem('cart', JSON.stringify(cart));
-    }
+    const saveCartToLocalStorage = () => localStorage.setItem('cart', JSON.stringify(cart));
 
-    function updateCartUI() {
+    const createElementWithClass = (elementType, className) => {
+        const element = document.createElement(elementType);
+        element.classList.add(className);
+        return element;
+    };
+
+    const updateCartCount = () => {
+        const cartCount = document.getElementById('cart-count');
+        cartCount.textContent = cart.reduce((total, item) => total + item.quantity, 0).toString();
+    };
+
+    const updateCartUI = () => {
         let totalValue = 0;
         const cartItemsContainer = document.getElementById('cart-items');
         cartItemsContainer.innerHTML = '';
 
         cart.forEach(item => {
-            const itemElement = document.createElement('div');
-            itemElement.classList.add('cart-item');
-
-            const removeBtn = document.createElement('button');
+            const itemElement = createElementWithClass('div', 'cart-item');
+            const removeBtn = createElementWithClass('button', 'remove-item-btn');
             removeBtn.innerHTML = '<i class="fas fa-times"></i>';
-            removeBtn.classList.add('remove-item-btn');
             removeBtn.setAttribute('data-product-id', item.id);
 
-
-            const itemImg = document.createElement('img');
+            const itemImg = createElementWithClass('img');
             itemImg.src = item.imageUrl;
             itemImg.alt = item.name;
             itemImg.style.width = "50px";
 
-            const itemInfo = document.createElement('div');
+            const itemInfo = createElementWithClass('div');
             itemInfo.textContent = `${item.name} - $${item.price.toFixed(2)} x ${item.quantity}`;
 
-            itemElement.appendChild(removeBtn);
-            itemElement.appendChild(itemImg);
-            itemElement.appendChild(itemInfo);
-
+            itemElement.append(removeBtn, itemImg, itemInfo);
             cartItemsContainer.appendChild(itemElement);
 
             totalValue += item.price * item.quantity;
@@ -39,29 +41,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
         document.getElementById('cart-total').textContent = totalValue.toFixed(2);
         attachRemoveButtonListeners();
-    }
+        updateCartCount();
+    };
 
-
-    function attachRemoveButtonListeners() {
+    const attachRemoveButtonListeners = () => {
         document.querySelectorAll('.remove-item-btn').forEach(button => {
-            button.addEventListener('click', function () {
-                const productId = this.getAttribute('data-product-id');
+            button.addEventListener('click', () => {
+                const productId = button.getAttribute('data-product-id');
                 removeItemFromCart(productId);
             });
         });
-    }
+    };
 
-    function removeItemFromCart(productId) {
+    const removeItemFromCart = (productId) => {
         const productIndex = cart.findIndex(item => item.id === productId);
         if (productIndex > -1) {
             cart.splice(productIndex, 1);
             saveCartToLocalStorage();
             updateCartUI();
         }
-    }
+    };
 
-    document.querySelectorAll('.btn-purchase').forEach(function (button) {
-        button.addEventListener('click', function () {
+    document.querySelectorAll('.btn-purchase').forEach(button => {
+        button.addEventListener('click', () => {
             const productCard = button.closest('.product-card');
             const productId = productCard.getAttribute('data-product-id');
             const productName = productCard.querySelector('.card-title').textContent;
@@ -86,12 +88,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    document.getElementById('cart-icon').addEventListener('click', function () {
+    document.getElementById('cart-icon').addEventListener('click', () => {
         document.getElementById('cart-menu').classList.add('open');
         updateCartUI();
     });
 
-    document.getElementById('close-cart').addEventListener('click', function () {
+    document.getElementById('close-cart').addEventListener('click', () => {
         document.getElementById('cart-menu').classList.remove('open');
     });
 

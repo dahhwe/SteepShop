@@ -3,16 +3,26 @@
     --secondary-color: #ff0000;
     --light-shadow: rgba(0, 0, 0, 0.2);
     --dark-shadow: rgba(0, 0, 0, 0.5);
+    --container-margin: 20px;
+    --footer-padding: 20px;
+    --transition-time: 0.5s;
+    --card-height: 100%;
+    --card-img-top-margin: 10px;
+    --btn-purchase-padding: 10px 20px;
+    --cart-menu-width: 400px;
+    --cart-menu-height: 100%;
+    --cart-item-img-width: 50px;
+    --cart-item-img-height: 50px;
 }
 
 .container {
-    margin-top: 20px;
+    margin-top: var(--container-margin);
 }
 
-.card {
-    transition: box-shadow 0.5s, transform 0.5s;
+.card, .product-card {
+    transition: box-shadow var(--transition-time), transform var(--transition-time);
     cursor: pointer;
-    height: 100%;
+    height: var(--card-height);
 }
 
 .card:hover {
@@ -24,7 +34,7 @@
     width: 100%;
     height: 200px;
     object-fit: contain;
-    margin-top: 10px;
+    margin-top: var(--card-img-top-margin);
 }
 
 .product-card {
@@ -35,10 +45,6 @@
     border: 1px solid #ddd;
     border-radius: .25rem;
     overflow: hidden;
-}
-
-.product-card, .card {
-    min-height: 400px;
 }
 
 .product-card .card-body {
@@ -52,11 +58,29 @@
     background-color: var(--primary-color);
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: var(--btn-purchase-padding);
     border-radius: 5px;
     position: absolute;
     bottom: 10px;
     left: 10px;
+}
+
+.remove-item-btn {
+    color: var(--primary-color);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.remove-item-btn:hover {
+    color: var(--secondary-color);
+}
+
+.cart-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 @media (max-width: 768px) {
@@ -67,8 +91,8 @@
 }
 
 footer {
-    margin-top: 20px;
-    padding: 20px;
+    margin-top: var(--container-margin);
+    padding: var(--footer-padding);
     background-color: var(--secondary-color);
     width: 100%;
     text-align: center;
@@ -80,13 +104,13 @@ footer {
 
 .cart-menu {
     position: fixed;
-    right: -400px;
+    right: calc(var(--cart-menu-width) * -1);
     top: 0;
-    width: 400px;
-    height: 100%;
+    width: var(--cart-menu-width);
+    height: var(--cart-menu-height);
     background-color: #fff;
     box-shadow: -2px 0 5px var(--dark-shadow);
-    transition: right 0.3s ease;
+    transition: right var(--transition-time) ease;
     z-index: 1000;
 }
 
@@ -102,7 +126,7 @@ footer {
 .cart-items {
     overflow-y: auto;
     padding: 20px;
-    height: calc(100% - 140px);
+    height: calc(var(--cart-menu-height) - 140px);
 }
 
 .cart-header {
@@ -126,8 +150,8 @@ footer {
 }
 
 .cart-item img {
-    width: 50px;
-    height: 50px;
+    width: var(--cart-item-img-width);
+    height: var(--cart-item-img-height);
     object-fit: contain;
     margin-right: 10px;
 }
