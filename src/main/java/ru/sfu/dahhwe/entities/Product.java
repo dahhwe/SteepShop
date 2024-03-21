@@ -28,15 +28,16 @@ public class Product {
     private Category category;
 
     @Column(name = "quantity")
-    private Integer availableQuantity;
+    private Integer quantity;
 
-    public Product(Long id, String name, String description, BigDecimal price, String imageUrl, Category category) {
+    public Product(Long id, String name, String description, BigDecimal price, String imageUrl, Category category, Integer quantity) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.imageUrl = imageUrl;
         this.category = category;
+        this.quantity = quantity;
     }
 
     public Product() {
@@ -90,11 +91,11 @@ public class Product {
         this.category = category;
     }
 
-    public Integer getAvailableQuantity() {
-        return availableQuantity;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public void setAvailableQuantity(Integer availableQuantity) {
-        this.availableQuantity = availableQuantity;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 }

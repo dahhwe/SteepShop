@@ -20,5 +20,4 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     // Find products by name (exact match)
     List<Product> findByName(String name);
 
-
 }

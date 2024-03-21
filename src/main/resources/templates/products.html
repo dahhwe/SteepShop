@@ -18,14 +18,8 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Features</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Pricing</a>
+                <button id="addProduct" class="btn btn-primary nav-link">Add Product</button>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#" id="cart-icon">
@@ -47,9 +41,57 @@
                     <p class="card-text" th:text="${product.description}">Product Description</p>
                     <p class="card-text">Price: <span class="price-text">$<span
                             th:text="${product.price}"></span></span></p>
-                    <p class="card-text">Available Quantity: <span th:text="${product.availableQuantity}">0</span></p>
-                    <button class="btn btn-purchase">Buy</button>
+                    <p class="card-text">Available Quantity: <span th:text="${product.quantity}">0</span></p>
+                    <button class="btn btn-purchase">Purchase</button>
+                    <button class="btn btn-edit">Edit</button>
+                    <button class="btn btn-delete" th:attr="data-product-id=${product.id}">Delete</button>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editProductForm">
+                    <div class="form-group">
+                        <label for="productName">Product Name</label>
+                        <input type="text" class="form-control" id="productName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productDescription">Product Description</label>
+                        <textarea class="form-control" id="productDescription" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">Price</label>
+                        <input type="number" class="form-control" id="productPrice" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productQuantity">Quantity</label>
+                        <input type="number" class="form-control" id="productQuantity" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productImageUrl">Image URL</label>
+                        <input type="text" class="form-control" id="productImageUrl" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productCategoryId">Category ID</label>
+                        <input type="number" class="form-control" id="productCategoryId" min="0" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveChanges">Save changes</button>
             </div>
         </div>
     </div>
