@@ -2,16 +2,19 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Shop Products</title>
+    <title>Steep Shop</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Sawarabi+Mincho&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
-
 </head>
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">SteepShop</a>
+    <a class="navbar-brand" href="#">
+        <img src="/favicon.ico" width="30" height="30" class="d-inline-block align-top" alt="">
+        SteepShop
+    </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -19,8 +22,9 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <button id="addProduct" class="btn btn-primary nav-link">Add Product</button>
-            </li>
+                <a class="nav-link" href="#" id="addProduct">
+                    <i class="fas fa-plus-circle"></i> Add Product
+                </a>
             <li class="nav-item">
                 <a class="nav-link" href="#" id="cart-icon">
                     <i class="fas fa-shopping-cart"></i> Cart

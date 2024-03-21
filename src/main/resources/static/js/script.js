@@ -1,22 +1,39 @@
+const ELEMENT_IDS = {
+    addProduct: 'addProduct',
+    productName: 'productName',
+    productDescription: 'productDescription',
+    productPrice: 'productPrice',
+    productQuantity: 'productQuantity',
+    productImageUrl: 'productImageUrl',
+    productCategoryId: 'productCategoryId',
+    modalContent: '.modal-content',
+    cartCount: 'cart-count',
+    cartItems: 'cart-items',
+    saveChanges: 'saveChanges',
+    cartIcon: 'cart-icon',
+    closeCart: 'close-cart',
+};
+
 function createElementWithClass(elementType, className) {
     const element = document.createElement(elementType);
     element.className = className;
     return element;
 }
 
+function resetInputFields() {
+    document.getElementById(ELEMENT_IDS.productName).value = '';
+    document.getElementById(ELEMENT_IDS.productDescription).value = '';
+    document.getElementById(ELEMENT_IDS.productPrice).value = '';
+    document.getElementById(ELEMENT_IDS.productQuantity).value = '';
+    document.getElementById(ELEMENT_IDS.productImageUrl).value = '';
+    document.getElementById(ELEMENT_IDS.productCategoryId).value = '';
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
-    document.getElementById('addProduct').addEventListener('click', () => {
-        document.getElementById('productName').value = '';
-        document.getElementById('productDescription').value = '';
-        document.getElementById('productPrice').value = '';
-        document.getElementById('productQuantity').value = '';
-        document.getElementById('productImageUrl').value = '';
-        document.getElementById('productCategoryId').value = '';
-
-        document.querySelector('.modal-content').removeAttribute('data-product-id');
-
-        // Show the modal
+    document.getElementById(ELEMENT_IDS.addProduct).addEventListener('click', () => {
+        resetInputFields();
+        document.querySelector(ELEMENT_IDS.modalContent).removeAttribute('data-product-id');
         $('#editProductModal').modal('show');
     });
 
@@ -126,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    document.getElementById('saveChanges').addEventListener('click', () => {
+    document.getElementById(ELEMENT_IDS.saveChanges).addEventListener('click', () => {
         const productId = document.querySelector('.modal-content').getAttribute('data-product-id');
         const productName = document.getElementById('productName').value;
         const productDescription = document.getElementById('productDescription').value;
@@ -163,12 +180,18 @@ document.addEventListener('DOMContentLoaded', () => {
             body: JSON.stringify(product),
         })
             .then(response => {
-                if (response.ok) {
-                    window.location.reload();
-                    $('#editProductModal').modal('hide');
-                } else {
-                    alert('There was an error updating the product. Please try again.');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
+                return response;
+            })
+            .then(() => {
+                window.location.reload();
+                $('#editProductModal').modal('hide');
+            })
+            .catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+                alert('There was an error updating the product. Please try again.');
             });
     });
 

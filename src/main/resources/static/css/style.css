@@ -15,6 +15,10 @@
     --cart-item-img-height: 50px;
 }
 
+.navbar {
+    font-family: 'Sawarabi Mincho', sans-serif;
+}
+
 .container {
     margin-top: var(--container-margin);
 }
