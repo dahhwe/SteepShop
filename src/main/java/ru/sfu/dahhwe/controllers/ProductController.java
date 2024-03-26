@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.sfu.dahhwe.services.ProductService;
 import ru.sfu.dahhwe.entities.Product;
 
-@Controller
+@RestController
 public class ProductController {
 
     private final ProductService productService;
