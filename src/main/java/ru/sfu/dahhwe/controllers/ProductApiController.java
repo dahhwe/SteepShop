@@ -1,28 +1,28 @@
 package ru.sfu.dahhwe.controllers;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.sfu.dahhwe.services.ProductService;
 import ru.sfu.dahhwe.entities.Product;
 
+import java.util.List;
+
 @RestController
-public class ProductController {
+@RequestMapping("/api/products")
+public class ProductApiController {
 
     private final ProductService productService;
 
-    public ProductController(ProductService productService) {
+    public ProductApiController(ProductService productService) {
         this.productService = productService;
     }
 
-    @GetMapping("/products")
-    public String listProducts(Model model) {
-        model.addAttribute("products", productService.findAllProducts());
-        return "products";
+    @GetMapping
+    public List<Product> listProducts() {
+        return productService.findAllProducts();
     }
 
-    @GetMapping("/products/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable Long id) {
         Product product = productService.findById(id);
         if (product == null) {
@@ -31,7 +31,7 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
-    @PostMapping("/products")
+    @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody Product newProduct) {
         Product createdProduct = productService.createProduct(newProduct);
         if (createdProduct == null) {
@@ -40,7 +40,7 @@ public class ProductController {
         return ResponseEntity.ok(createdProduct);
     }
 
-    @PutMapping("/products/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product productDetails) {
         Product updatedProduct = productService.updateProduct(id, productDetails);
         if (updatedProduct == null) {
@@ -49,7 +49,7 @@ public class ProductController {
         return ResponseEntity.ok(updatedProduct);
     }
 
-    @DeleteMapping("/products/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
         if (productService.deleteProduct(id)) {
             return ResponseEntity.ok().build();

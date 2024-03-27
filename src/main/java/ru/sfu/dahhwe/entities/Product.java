@@ -1,5 +1,6 @@
 package ru.sfu.dahhwe.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -23,6 +24,7 @@ public class Product {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;

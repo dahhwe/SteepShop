@@ -1,6 +1,7 @@
 package ru.sfu.dahhwe.entities;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.util.Set;
 
@@ -11,12 +12,13 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String name;
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "category")
     private Set<Product> products;
 

@@ -30,6 +30,46 @@ function resetInputFields() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    const socket = new SockJS('/ws');
+    const stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame);
+
+        stompClient.subscribe('/topic/public', function (messageOutput) {
+            const receivedMessage = JSON.parse(messageOutput.body);
+
+            const senderName = receivedMessage.sender;
+            const messageContent = receivedMessage.content;
+
+            addMessageToChat(`${senderName}: ${messageContent}`);
+        });
+    });
+
+    document.getElementById('sendButton').addEventListener('click', sendMessage);
+
+    let senderName = localStorage.getItem('senderName');
+
+    if (!senderName) {
+        senderName = prompt("Please enter your name:");
+        localStorage.setItem('senderName', senderName);
+    }
+
+    function sendMessage() {
+        const messageInput = document.getElementById('messageInput').value;
+
+        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify({
+            'sender': senderName,
+            'content': messageInput
+        }));
+    }
+
+    function addMessageToChat(message) {
+        const chatMessages = document.getElementById('chat-messages');
+        const messageElement = document.createElement('p');
+        messageElement.textContent = message;
+        chatMessages.appendChild(messageElement);
+    }
 
     document.getElementById(ELEMENT_IDS.addProduct).addEventListener('click', () => {
         resetInputFields();
