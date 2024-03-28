@@ -44,7 +44,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
             addMessageToChat(`${senderName}: ${messageContent}`);
         });
+
+        stompClient.subscribe('/topic/publicRoom2', function (messageOutput) {
+            const receivedMessage = JSON.parse(messageOutput.body);
+
+            const senderName = receivedMessage.sender;
+            const messageContent = receivedMessage.content;
+
+            addMessageToChatRoom2(`${senderName}: ${messageContent}`);
+        });
+
     });
+
+    function switchRoom(roomId) {
+        const chatRooms = document.getElementsByClassName('chat-room');
+        const tabButtons = document.getElementsByClassName('tab-button');
+
+        for (let i = 0; i < chatRooms.length; i++) {
+            chatRooms[i].classList.remove('active');
+            tabButtons[i].classList.remove('active');
+        }
+
+        document.getElementById(roomId).classList.add('active');
+        document.querySelector(`.tab-button[data-room-id='${roomId}']`).classList.add('active');
+    }
+
+    const roomButtons = document.getElementsByClassName('room-button');
+    for (let i = 0; i < roomButtons.length; i++) {
+        roomButtons[i].addEventListener('click', function () {
+            switchRoom(this.getAttribute('data-room-id'));
+        });
+    }
+
+    function addMessageToChatRoom2(message) {
+        const chatMessagesRoom2 = document.getElementById('chat-messages-room2');
+        const messageElement = document.createElement('p');
+        messageElement.textContent = message;
+        chatMessagesRoom2.appendChild(messageElement);
+    }
 
     document.getElementById('sendButton').addEventListener('click', sendMessage);
 
@@ -58,7 +95,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function sendMessage() {
         const messageInput = document.getElementById('messageInput').value;
 
-        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify({
+        const activeRoom = document.querySelector('.chat-room.active').id;
+
+        const destination = activeRoom === 'room2' ? "/app/chat.sendMessage.room2" : "/app/chat.sendMessage";
+
+        stompClient.send(destination, {}, JSON.stringify({
             'sender': senderName,
             'content': messageInput
         }));
@@ -209,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        const url = productId ? `/products/${productId}` : '/products';
+        const url = productId ? `/products/${productId}` : '/api/products';
         const method = productId ? 'PUT' : 'POST';
 
         fetch(url, {
@@ -239,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
         button.addEventListener('click', () => {
             const productId = button.closest('.product-card').getAttribute('data-product-id');
             if (confirm('Are you sure you want to delete this product?')) {
-                fetch(`/products/${productId}`, {
+                fetch(`api/products/${productId}`, {
                     method: 'DELETE',
                 })
                     .then(response => {

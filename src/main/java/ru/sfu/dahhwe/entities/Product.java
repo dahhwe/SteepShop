@@ -1,12 +1,16 @@
 package ru.sfu.dahhwe.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "products")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +28,6 @@ public class Product {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;

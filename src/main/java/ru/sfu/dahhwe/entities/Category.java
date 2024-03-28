@@ -1,12 +1,16 @@
 package ru.sfu.dahhwe.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.util.Set;
 
 @Entity
 @Table(name = "categories")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +22,6 @@ public class Category {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "category")
     private Set<Product> products;
 

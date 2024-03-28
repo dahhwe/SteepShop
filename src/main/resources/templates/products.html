@@ -36,36 +36,43 @@
 </nav>
 
 <div class="main-content">
-<div class="container">
-    <div class="row">
-        <div th:each="product : ${products}" class="col-md-4 mb-3">
-            <div class="card product-card" th:attr="data-product-id=${product.id}">
-                <img th:src="@{${product.imageUrl}}" class="card-img-top" alt="Product Image" loading="lazy">
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${product.name}">Product Name</h5>
-                    <p class="card-text" th:text="${product.description}">Product Description</p>
-                    <p class="card-text">Price: <span class="price-text">$<span
-                            th:text="${product.price}"></span></span></p>
-                    <p class="card-text">Available Quantity: <span th:text="${product.quantity}">0</span></p>
-                    <button class="btn btn-purchase">Purchase</button>
-                    <button class="btn btn-edit">Edit</button>
-                    <button class="btn btn-delete" th:attr="data-product-id=${product.id}">Delete</button>
+    <div class="container">
+        <div class="row">
+            <div th:each="product : ${products}" class="col-md-4 mb-3">
+                <div class="card product-card" th:attr="data-product-id=${product.id}">
+                    <img th:src="@{${product.imageUrl}}" class="card-img-top" alt="Product Image" loading="lazy">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${product.name}">Product Name</h5>
+                        <p class="card-text" th:text="${product.description}">Product Description</p>
+                        <p class="card-text">Price: <span class="price-text">$<span
+                                th:text="${product.price}"></span></span></p>
+                        <p class="card-text">Available Quantity: <span th:text="${product.quantity}">0</span></p>
+                        <button class="btn btn-purchase">Purchase</button>
+                        <button class="btn btn-edit">Edit</button>
+                        <button class="btn btn-delete" th:attr="data-product-id=${product.id}">Delete</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-</div>
 
 <div class="chat-container">
-    <div id="chat-messages" class="chat-messages">
+    <div class="tabs">
+        <button class="tab-button active room-button" data-room-id="room1">Room 1</button>
+        <button class="tab-button room-button" data-room-id="room2">Room 2</button>
+    </div>
+    <div id="room1" class="chat-room active room1">
+        <div id="chat-messages" class="chat-messages"></div>
+    </div>
+    <div id="room2" class="chat-room room2">
+        <div id="chat-messages-room2" class="chat-messages"></div>
     </div>
     <div class="chat-input">
         <label for="messageInput"></label><input type="text" id="messageInput" placeholder="Type your message here...">
         <button id="sendButton">Send</button>
     </div>
 </div>
-
 
 <div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel"
      aria-hidden="true">

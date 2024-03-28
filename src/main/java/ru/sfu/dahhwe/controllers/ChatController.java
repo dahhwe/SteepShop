@@ -19,4 +19,9 @@ public class ChatController {
     public void sendMessage(@Payload ChatMessage chatMessage) {
         messagingTemplate.convertAndSend("/topic/public", chatMessage);
     }
+
+    @MessageMapping("/chat.sendMessage.room2")
+    public void sendMessageRoom2(@Payload ChatMessage chatMessage) {
+        messagingTemplate.convertAndSend("/topic/publicRoom2", chatMessage);
+    }
 }
