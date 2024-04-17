@@ -30,31 +30,119 @@ function resetInputFields() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const socket = new SockJS('/ws');
-    const stompClient = Stomp.over(socket);
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('firebase-messaging-sw.js');
+        });
+    }
 
-    stompClient.connect({}, function (frame) {
-        console.log('Connected: ' + frame);
+    const firebaseConfig = {
+        apiKey: "AIzaSyAu81G9VUwuwUPycLPzx1OPBexgTeGct_4",
+        authDomain: "mystic-aileron-417516.firebaseapp.com",
+        databaseURL: "https://mystic-aileron-417516-default-rtdb.firebaseio.com",
+        projectId: "mystic-aileron-417516",
+        storageBucket: "mystic-aileron-417516.appspot.com",
+        messagingSenderId: "474646950123",
+        appId: "1:474646950123:web:14109f507093e650e64eae",
+        measurementId: "G-95GVZ671YG"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const messaging = firebase.messaging();
+    const database = firebase.database();
 
-        stompClient.subscribe('/topic/public', function (messageOutput) {
-            const receivedMessage = JSON.parse(messageOutput.body);
-
-            const senderName = receivedMessage.sender;
-            const messageContent = receivedMessage.content;
-
-            addMessageToChat(`${senderName}: ${messageContent}`);
+    messaging.requestPermission()
+        .then(function () {
+            console.log('Notification permission granted.');
+            return messaging.getToken();
+        })
+        .then(function (token) {
+            console.log('Token: ', token);
+            fetch('/api/saveToken', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({token: token, username: senderName}),
+            })
+                .catch(function (err) {
+                    console.log('Unable to send token to server.', err);
+                });
+        })
+        .catch(function (err) {
+            console.log('Unable to get permission to notify.', err);
         });
 
-        stompClient.subscribe('/topic/publicRoom2', function (messageOutput) {
-            const receivedMessage = JSON.parse(messageOutput.body);
+    messaging.onMessage((payload) => {
+        console.log('Message received. ', payload);
+        const notificationTitle = payload.data.sender;
+        const notificationOptions = {
+            body: payload.data.message,
+        };
 
-            const senderName = receivedMessage.sender;
-            const messageContent = receivedMessage.content;
-
-            addMessageToChatRoom2(`${senderName}: ${messageContent}`);
-        });
-
+        if (Notification.permission === "granted") {
+            var notification = new Notification(notificationTitle, notificationOptions);
+        }
+        console.log('Displaying notification with title: ' + payload.data.sender + ' and body: ' + payload.data.message);
     });
+
+
+    function writeNewMessage(sender, content, room) {
+        var postData = {
+            sender: sender,
+            content: content
+        };
+
+        var newPostKey = firebase.database().ref().child('messages/' + room).push().key;
+        var updates = {};
+        updates['/messages/' + room + '/' + newPostKey] = postData;
+
+        console.log('Writing new message from ' + sender + ' to room ' + room + ': ' + content);
+
+        fetch('/messages', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                sender: sender,
+                message: content,
+                room: room
+            }),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+            })
+            .catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+            });
+    }
+
+
+    function listenForNewMessages(room, callback) {
+        var messagesRef = database.ref('messages/' + room);
+        messagesRef.on('child_added', function (data) {
+            const message = data.val();
+            callback(`${message.sender}: ${message.content}`);
+        });
+    }
+
+    document.getElementById('sendButton').addEventListener('click', function () {
+        const messageInput = document.getElementById('messageInput').value;
+        let senderName = localStorage.getItem('senderName');
+
+        if (!senderName) {
+            senderName = prompt("Please enter your name:");
+            localStorage.setItem('senderName', senderName);
+        }
+
+        const activeRoom = document.querySelector('.chat-room.active').id;
+        writeNewMessage(senderName, messageInput, activeRoom);
+    });
+
+    listenForNewMessages('room1', addMessageToChat);
+    listenForNewMessages('room2', addMessageToChatRoom2);
 
     function switchRoom(roomId) {
         const chatRooms = document.getElementsByClassName('chat-room');
@@ -83,26 +171,11 @@ document.addEventListener('DOMContentLoaded', () => {
         chatMessagesRoom2.appendChild(messageElement);
     }
 
-    document.getElementById('sendButton').addEventListener('click', sendMessage);
-
     let senderName = localStorage.getItem('senderName');
 
     if (!senderName) {
         senderName = prompt("Please enter your name:");
         localStorage.setItem('senderName', senderName);
-    }
-
-    function sendMessage() {
-        const messageInput = document.getElementById('messageInput').value;
-
-        const activeRoom = document.querySelector('.chat-room.active').id;
-
-        const destination = activeRoom === 'room2' ? "/app/chat.sendMessage.room2" : "/app/chat.sendMessage";
-
-        stompClient.send(destination, {}, JSON.stringify({
-            'sender': senderName,
-            'content': messageInput
-        }));
     }
 
     function addMessageToChat(message) {
